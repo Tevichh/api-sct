@@ -1,10 +1,32 @@
 from flask import Blueprint, jsonify, request
 from models.paciente import Paciente
 from utils.db import db
+from f_jwt import validate_token
 
 pacientes = Blueprint("pacientes", __name__)
 
+
+@pacientes.before_request
+def validar_token():
+    # Permitir solicitudes OPTIONS sin autenticación
+    if request.method == "OPTIONS":
+        return "", 200
+
+    # Obtener el encabezado de autorización
+    auth_header = request.headers.get("Authorization")
+
+    if not auth_header or not auth_header.startswith("Bearer "):
+        return (
+            jsonify({"message": "Token de autenticación faltante o mal formado"}),
+            401,
+        )
+
+    token = auth_header.split(" ")[1]
+    return validate_token(token, output=False)
+
+
 # METODO GET
+
 
 @pacientes.route("/pacientes", methods=["GET"])
 def get_pacientes():
@@ -60,6 +82,7 @@ def get_paciente(identificador):
 
 
 # METODO POST
+
 
 @pacientes.route("/pacientes", methods=["POST"])
 def add_paciente():

@@ -8,5 +8,5 @@ class Users(db.Model):
         db.Integer, unique=True, nullable=False, primary_key=True, autoincrement=True
     )
     username = db.Column(db.String(50), unique=True, nullable=False)
-    password = db.Column(db.String(50), nullable=False)
+    password = db.Column(db.String(128), nullable=False)
     rol = db.Column(db.String(50), nullable=False)
