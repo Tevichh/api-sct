@@ -53,12 +53,8 @@ def get_pacientes():
 
 @pacientes.route("/pacientes/<string:identificador>", methods=["GET"])
 def get_paciente(identificador):
-    # Primero intenta buscar por num_paciente_id
-    paciente = Paciente.query.filter_by(num_paciente_id=identificador).first()
 
-    # Si no se encuentra por num_paciente_id, intenta buscar por tipo_id
-    if not paciente:
-        paciente = Paciente.query.filter_by(tipo_id=identificador).first()
+    paciente = Paciente.query.filter_by(num_paciente_id=identificador).first()
 
     if not paciente:
         return jsonify({"message": "Paciente not found"}), 404

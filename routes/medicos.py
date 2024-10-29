@@ -49,6 +49,46 @@ def get_medicos():
     return jsonify(medicos_list)
 
 
+@medicos.route("/medicos/<string:identificador>", methods=["GET"])
+def get_medico(identificador):
+    medico = Medico.query.filter_by(num_medico_id=identificador).first()
+    return jsonify(
+        {
+            "tipo_id": medico.tipo_id,
+            "num_medico_id": medico.num_medico_id,
+            "nombre_1": medico.nombre_1,
+            "nombre_2": medico.nombre_2,
+            "apellido_1": medico.apellido_1,
+            "apellido_2": medico.apellido_2,
+            "num_telefono": medico.num_telefono,
+            "email": medico.email,
+        }
+    )
+
+
+@medicos.route("/medicos/user", methods=["POST"])
+def get_medicoUser():
+    data = request.get_json()
+    user = data.get("user")
+
+    if not user:
+        return jsonify({"error": "Se requiere el campo 'user'"}), 400
+
+    medico = Medico.query.filter_by(user=user).first()
+
+    if not medico:
+        return jsonify({"error": "Médico no encontrado"}), 404
+    
+    return jsonify(
+        {
+            "nombre_1": medico.nombre_1,
+            "nombre_2": medico.nombre_2,
+            "apellido_1": medico.apellido_1,
+            "apellido_2": medico.apellido_2,
+        }
+    )
+
+
 # METODO POST
 @medicos.route("/medicos", methods=["POST"])
 def add_medico():
@@ -66,8 +106,6 @@ def add_medico():
         "password": data["num_medico_id"],
         "rol": "Medico",
     }
-
-    print(userName)
 
     response = registrar(user_data)
 
