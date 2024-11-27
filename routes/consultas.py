@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify, request
 from models.consulta import Consulta
 from utils.db import db
 from f_jwt import validate_token
-from src.examenConsulta import examenConsulta
+from src.prueba import examenConsulta
 import os
 
 consulta = Blueprint("consultas", __name__)
@@ -119,7 +119,7 @@ def method_name():
     if file.filename == "":
         return "No se ha seleccionado ninguna imagen", 400
 
-    rutaImagenes = "src/muestrasPacientes"
+    rutaImagenes = "src/muestrasPacientes/examenes"
     path = os.path.join(rutaImagenes, file.filename)
 
     file.save(path)
