@@ -5,8 +5,9 @@ import matplotlib.pyplot as plt
 from PIL import Image
 
 
-ruta_modelo = "src/modeloEntrenado/mejor_modelo_hmn.h5"
+ruta_modelo = "src/modeloEntrenado/primerModeloV2.h5"
 
+tiposCancer = ['actinic keratosis', 'basal cell carcinoma', 'healthy', 'invasive melanoma', 'melanoma in situ', 'nevus NOS', 'seborrheic keratosis', 'squamous cell carcinoma']
 
 def examenConsulta(nombre_imagen):
 
@@ -19,16 +20,18 @@ def examenConsulta(nombre_imagen):
     img = Image.open(nombre_imagen)
     img = img.convert("RGB")
     img = np.array(img).astype(float) / 255
-    img = cv2.resize(img, (224, 224))
+    img = cv2.resize(img, (120, 120))
 
-    predicciones = modelo.predict(img.reshape(-1, 224, 224, 3))
+    predicciones = modelo.predict(img.reshape(-1, 120, 120, 3))
     clase_predicha = np.argmax(predicciones[0], axis=-1)
 
-    """ print(f"Clase predicha: {clase_predicha}")
+    print(f"Clase predicha: {tiposCancer[clase_predicha]}")
 
     plt.imshow(img)
     plt.axis("off")
     plt.title("Imagen Cargada")
-    plt.show() """
+    plt.show()
 
     return clase_predicha
+
+#examenConsulta("imagenSanaPrueba.jpg")
